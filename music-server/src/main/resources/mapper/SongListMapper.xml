@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javaclimb.musicplayer.dao.SongListMapper">
+    <resultMap id="BaseResultMap" type="com.javaclimb.musicplayer.domain.SongList" >
+        <id property="id" jdbcType="INTEGER" column="id"/>
+        <result property="title" jdbcType="VARCHAR" column="title"/>
+        <result property="pic" jdbcType="VARCHAR" column="pic"/>
+        <result property="style" jdbcType="VARCHAR" column="style"/>
+    </resultMap>
+
+    <resultMap type="com.javaclimb.musicplayer.domain.SongList" id="ResultMapWithBLOBs" extends="BaseResultMap">
+    <result property="introduction" jdbcType="LONGVARCHAR" column="introduction"/>
+    </resultMap>
+<!--列出所有 列  ，用于查询-->
+    <sql id="Base_Column_List">
+    id,title,pic,style
+    </sql>
+    <sql id="Blob_Column_List">
+    id,title,pic,style,introduction
+    </sql>
+
+<!--    增加-->
+<!--    <trim prefix="(" suffix=")" suffixOverrides=",">  去掉前边的 （，去掉后边的 ），去掉最后一个 ，-->
+<!--    parameterType  输入参数类型-->
+<!--    resultMap   返回对象-->
+    <insert id="insert" parameterType="com.javaclimb.musicplayer.domain.SongList">
+        insert into song_list
+        <trim suffixOverrides="," suffix=")" prefix="(">
+        <if test="id != null">id, </if>
+        <if test="title != null">title, </if>
+        <if test="pic != null">pic, </if>
+        <if test="introduction != null">introduction, </if>
+        <if test="style != null">style, </if>
+    </trim>
+        <trim suffixOverrides="," suffix=")" prefix=" values (">
+        <if test="id != null">#{id}, </if>
+        <if test="title != null">#{title}, </if>
+        <if test="pic != null">#{pic}, </if>
+        <if test="introduction != null">#{introduction}, </if>
+        <if test="style != null">#{style}, </if>
+    </trim>
+    </insert>
+
+<!--    修改-->
+    <update id="update" parameterType="com.javaclimb.musicplayer.domain.SongList">
+        update song_list
+        <set>
+        <if test="title != null">title = #{title}, </if>
+        <if test="pic != null">pic = #{pic}, </if>
+        <if test="introduction != null">introduction = #{introduction}, </if>
+        <if test="style != null">style = #{style}, </if>
+    </set>
+        where id = #{id}
+    </update>
+
+<!--删除-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from song_list
+        where id=#{id}
+    </delete>
+
+<!--    查询-->
+    <select id="selectSongListById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+        select
+        <include refid="Blob_Column_List"/>
+        from song_list
+        where id=#{id}
+    </select>
+
+    <select id="allSongList" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Blob_Column_List"/>
+        from song_list
+    </select>
+
+    <select id="selectSongListLikeTitle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Blob_Column_List"/>
+        from song_list
+        where title like #{title}
+    </select>
+
+    <select id="selectSongListByTitle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Blob_Column_List"/>
+        from song_list
+        where title = #{title}
+    </select>
+
+    <select id="selectSongListByStyle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Blob_Column_List"/>
+        from song_list
+        where style like #{style}
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

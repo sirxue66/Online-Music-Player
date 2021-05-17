@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.javaclimb.musicplayer.dao.CommentMapper">
+    <resultMap id="BaseResultMap" type="com.javaclimb.musicplayer.domain.Comment" >
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result property="userId" jdbcType="INTEGER" column="user_id"/>
+        <result property="type" jdbcType="TINYINT" column="type"/>
+        <result property="songId" jdbcType="INTEGER" column="song_id"/>
+        <result property="songListId" jdbcType="INTEGER" column="song_list_id"/>
+        <result property="content" jdbcType="VARCHAR" column="content"/>
+        <result property="createTime" jdbcType="TIMESTAMP" column="create_time"/>
+        <result property="up" jdbcType="INTEGER" column="up"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id,user_id,type,song_id,song_list_id,content,create_time,up
+    </sql>
+
+
+    <insert id="insert" parameterType="com.javaclimb.musicplayer.domain.Comment">
+    insert into comment
+    <trim suffixOverrides="," suffix=")" prefix="(">
+    <if test="id != null">id, </if>
+    <if test="userId != null">user_id, </if>
+    <if test="type != null">type, </if>
+    <if test="songId != null">song_id, </if>
+    <if test="songListId != null">song_list_id, </if>
+    <if test="content != null">content, </if>
+    create_time,
+    <if test="up != null">up, </if>
+    </trim>
+
+    <trim suffixOverrides="," suffix=")" prefix=" values (">
+    <if test="id != null">#{id}, </if>
+    <if test="userId != null">#{userId}, </if>
+    <if test="type != null">#{type}, </if>
+    <if test="songId != null">#{songId}, </if>
+    <if test="songListId != null">#{songListId}, </if>
+    <if test="content != null">#{content}, </if>
+    now(),
+    <if test="up != null">#{up}, </if>
+    </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.javaclimb.musicplayer.domain.Comment">
+    update comment
+    <set>
+    <if test="userId != null">user_id = #{userId}, </if>
+    <if test="type != null">type = #{type}, </if>
+    <if test="songId != null">song_id = #{songId}, </if>
+    <if test="songListId != null">song_list_id = #{songListId}, </if>
+    <if test="content != null">content = #{content}, </if>
+    <if test="up != null">up = #{up}, </if>
+    </set>
+    where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+    delete from comment
+    where id=#{id}
+    </delete>
+
+
+    <select id="selectCommentById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from comment
+    where id=#{id}
+    </select>
+
+
+    <select id="allComments" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from comment
+    </select>
+
+
+    <select id="selectCommentBySongId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from comment
+    where song_id = #{songId}
+    </select>
+
+
+    <select id="selectCommentBySongListId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from comment
+    where song_list_id = #{songListId}
+    </select>
+
+    </mapper>

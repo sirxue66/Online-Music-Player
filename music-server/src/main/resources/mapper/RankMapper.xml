@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javaclimb.musicplayer.dao.RankMapper">
+    <resultMap id="BaseResultMap" type="com.javaclimb.musicplayer.domain.Rank" >
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result property="songListId" jdbcType="INTEGER" column="song_list_id"/>
+        <result property="consumerId" jdbcType="INTEGER" column="consumer_id"/>
+        <result property="score" jdbcType="INTEGER" column="score"/>
+    </resultMap>
+
+<!--增加-->
+    <insert id="insert" parameterType="com.javaclimb.musicplayer.domain.Rank">
+    insert into rank
+    <trim suffixOverrides="," suffix=")" prefix="(">
+    <if test="id != null">id, </if>
+    <if test="songListId != null">song_list_id, </if>
+    <if test="consumerId != null">consumer_id, </if>
+    <if test="score != null">score, </if>
+    </trim>
+
+    <trim suffixOverrides="," suffix=")" prefix=" values (">
+    <if test="id != null">#{id}, </if>
+    <if test="songListId != null">#{songListId}, </if>
+    <if test="consumerId != null">#{consumerId}, </if>
+    <if test="score != null">#{score}, </if>
+    </trim>
+    </insert>
+
+<!--  COALESCE 方法在查询分数为空的时候，就为 0  -->
+    <select id="selectAllScore" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select COALESCE(sum(score),0) as score
+    from rank
+    where song_list_id = #{songListId}
+    </select>
+
+    <select id="selectAllConsumer" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select COALESCE(count(id),0) as num
+    from rank
+    where song_list_id = #{songListId}
+    </select>
+</mapper>
